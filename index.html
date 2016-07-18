@@ -21,18 +21,19 @@
     <header class="jumbotron">
       <h1>Who Owes Who</h1>
       <p class="text-muted">Figure out who owes who what</p>
+      <div id="results" class="results"></div>
     </header>
 
-    <form class="form" id="form" action="js/formula.js" method="post">
+    <form onsubmit="return false;" class="form" id="form" action="js/formula.js" method="post">
       <div class="fields">
         <div id="field1">
         <input autocomplete="off" class="input" id="name1" name="name1" type="text" placeholder="Name">
         <input autocomplete="off" class="input" id="howMuchOwed1" name="howMuchOwed1" type="text" placeholder="Owes this much">
         <input autocomplete="off" class="input" id="toWhom1" name="toWhom1" type="text" placeholder="To whom">
         <input autocomplete="off" class="input" id="forWhat1" name="forWhat1" type="text" placeholder="For what">
-        </div>
         <button id="addButton" type="button">Add Another IOU</button>
+        </div>
       </div>
       <p></p>
-      <input type="submit" value="Now, who owes who?">
+      <input id="calculate" type="submit" value="Now, who owes who?">
     </form>
