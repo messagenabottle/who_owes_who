@@ -36,6 +36,10 @@ $(document).ready(function() {
 		}
 	});
 
+	$('#calculate').click(function() {
+		
+	})
+
 
 	// for (name in names, howMuchOwed in howMuchOweds, toWhom in toWhoms, forWhat in forWhats) {
 	// 	debt.names.push($("#name").val());
