@@ -1,292 +1,183 @@
-// ' + count + ';
-// var newIOU = "hello";
-var count = 1;
-var persons = [];
+var owes = {};
+var gets = {};
+
+// Gather all the persons who owe money function
+function Owes (from_whom, debt, for_what) {
+	this.from_whom = from_whom;
+	this.debt = debt;
+	this.for_what = [for_what];
+}
+
+// Gather all the persons who get money function
+function Gets (to_whom, debt, for_what) {
+	this.to_whom = to_whom;
+	this.debt = debt;
+	this.for_what = [for_what];
+}
+
+// Convert to currency function
+function formatCurrency(total) {
+	var neg = false;
+	if(total < 0) {
+		neg = true;
+		total = Math.abs(total);
+	}
+	return (neg ? "-$" : '$') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+};
+
+// Place objects into arrays sorted by debt function
+function sortObject(obj) {
+    var arr = [];
+    var prop;
+    for (prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+            arr.push({
+                'name': prop,
+                'debt': obj[prop].debt,
+                'items': obj[prop].for_what
+            });
+        }
+    }
+    arr.sort(function(a, b) {
+        return b.debt - a.debt;
+    });
+    return arr; // returns array
+}
 
 $(document).ready(function() {
-  
-    $('#addButton').click(function() {
-        count = count + 1;
-        // console.log(count);
-        var name = '<input autocomplete="off" class="input" id="name' + count + '" name="name' + count + '" type="text" placeholder="Name">';
-        var howMuchOwed = '<input autocomplete="off" class="input" id="howMuchOwed' + count + '" name="howMuchOwed' + count + '" type="text" placeholder="Owes this much">';
-        var toWhom = '<input autocomplete="off" class="input" id="toWhom' + count + '" name="toWhom' + count + '" type="text" placeholder="To whom">';
-        var forWhat = '<input autocomplete="off" class="input" id="forWhat' + count + '" name="forWhat' + count + '" type="text" placeholder="For what">';
-        var newIOU = '<div id="field' + count + '">' + name + howMuchOwed + toWhom + forWhat + '</div>';
-        $('.fields').prepend(newIOU);
-    });
+// Field variables
+    var $fromWhom = '<input autocomplete="off" class="input" id="fromWhom" name="fromWhom" type="text" placeholder="From whom">';
+    var $debt = '<input autocomplete="off" class="input" id="debt" name="debt" type="text" placeholder="Debt">';
+    var $toWhom = '<input autocomplete="off" class="input" id="toWhom" name="toWhom" type="text" placeholder="To whom">';
+    var $forWhat = '<input autocomplete="off" class="input" id="forWhat" name="forWhat" type="text" placeholder="For what">';
+	var $addButton = '<button id="addButton" type="button">+</button>';
+	var $removeButton = '<button id="removeButton" type="button">-</button>';
 
-    // $('#removeButton').click(function() {
-    //     if (count = 1) {
-    //         count = 1;
-    //     }
+// Establish field counting and insert first field	
+	var $count = 1;
+	var $field = $('#field' + $count);
+	var $fields = $('.fields');
+	var $firstIOU = '<div id="field' + $count + '">' + $fromWhom + $debt + $toWhom + $forWhat + $addButton + $removeButton + '</div>';
+	$fields.append($firstIOU);
 
-    //     else {
-    //         count = count - 1;
-    //     }
+// Add field
+	$('#addButton').click(function() {
+	    $count += 1;
+	    var $newIOU = '<div id="field' + $count + '">' + $fromWhom + $debt + $toWhom + $forWhat + '</div>';
+	    $fields.append($newIOU);
+	});
 
-    //     // console.log(count);
-    //     var name = '<input autocomplete="off" class="input" id="name' + count + '" name="name' + count + '" type="text" placeholder="Name">';
-    //     var howMuchOwed = '<input autocomplete="off" class="input" id="howMuchOwed' + count + '" name="howMuchOwed' + count + '" type="text" placeholder="Owes this much">';
-    //     var toWhom = '<input autocomplete="off" class="input" id="toWhom' + count + '" name="toWhom' + count + '" type="text" placeholder="To whom">';
-    //     var forWhat = '<input autocomplete="off" class="input" id="forWhat' + count + '" name="forWhat' + count + '" type="text" placeholder="For what">';
-    //     var newIOU = '<div id="field' + count + '">' + name + howMuchOwed + toWhom + forWhat + '</div>';
-    //     $('.fields').prepend(newIOU);
-    // });
+// Remove field
+	$('#removeButton').click(function() {
+		if ($count > 1) {
+			$('#field' + $count).remove();
+			$count -= 1;
+		}
+	});
 
-    // $("div:field" + count).text( "<b>Some</b> new text." );
+	$('#calculate').click(function() {
+// Clear old objects		
+		for (var clearOwes in owes){
+    		if (owes.hasOwnProperty(clearOwes)){
+        	delete owes[clearOwes];
+    		}
+		}
+		for (var clearGets in gets){
+    		if (gets.hasOwnProperty(clearGets)){
+        	delete gets[clearGets];
+    		}
+		}
 
-    // .each()
+		$('.results').empty();
+		var $results = $('.results');
 
-    var math = {
-    };
+// Loops through fields and get inputs		
+		for (i=1; i <= $count; i++) {
+			var $fromWhom = $('#field' + i).children('#fromWhom').val();
+			var $debt = parseFloat($('#field' + i).children('#debt').val());
+			var $toWhom = $('#field' + i).children('#toWhom').val();
+			var $forWhat = $('#field' + i).children('#forWhat').val();
 
-    $('#calculate').click(function() {
-        //How many entries
-        var entries = $("div").length - 2;
-        // console.log(entries);
+// !! Fix doubling if you click Calculate twice !!
+// Merge the same persons who owe money
+			if (owes.hasOwnProperty($fromWhom)) {
+				owes[$fromWhom].debt += $debt;
+				owes[$fromWhom].for_what.push($forWhat);
+			}
+			else if (!owes.hasOwnProperty($fromWhom)) {
+				owes[$fromWhom] = new Owes($fromWhom, $debt, $forWhat);
+			}
+// Merge the same persons who get money
+			if (gets.hasOwnProperty($toWhom)) {
+				gets[$toWhom].debt += $debt;
+			}
+			else if (!gets.hasOwnProperty($toWhom)) {
+				gets[$toWhom] = new Gets($toWhom, $debt, $forWhat);
+			}
+		}
 
+// If someone owes and gets money, subtract what they get from what they owe or vise-versa
+		for (var owes_gets in owes) {
+			for (var gets_owes in gets) {
+				if (owes[owes_gets].from_whom == gets[gets_owes].to_whom && owes[owes_gets].debt >= gets[gets_owes].debt) {
+					owes[owes_gets].debt -= gets[gets_owes].debt;
+					gets[gets_owes].debt = 0;
+				}
+				else if (owes[owes_gets].from_whom == gets[gets_owes].to_whom && owes[owes_gets].debt < gets[gets_owes].debt) {
+					gets[gets_owes].debt -= owes[owes_gets].debt;
+					owes[owes_gets].debt = 0;
+				}
+			}
+		}
 
-        $.ajax({url: math.result,
-            type: 'POST',
-            success: function(data) {
-
-                //clear previous results
-                $('#results').empty();
-
-                
-                //loops to compare lines
-                for (i = 1; i <= entries; i++) {
-                    for (j = 1; j <= entries; j++) {
-                        
-                        //declare loop variables
-                        var $name_val_a = $("#name" + i).val();
-                        var $name_val_b = $("#name" + j).val();
-                        var $howMuchOwed_val_a = Number($("#howMuchOwed" + i).val());
-                        var $howMuchOwed_val_b = Number($("#howMuchOwed" + j).val());
-                        var $toWhom_val_a = $("#toWhom" + i).val();
-                        var $toWhom_val_b = $("#toWhom" + j).val();
-                        var $forWhat_val_a = $("#forWhat" + i).val();
-                        var $forWhat_val_b = $("#forWhat" + j).val();
-
-                        //same name variables
-                        var $nameSame_out = [];
-                        var $howMuchOwedSame_out = [];
-                        var $toWhomSame_out = [];
-                        var $forWhatSame_out = [];
-                        
-                        //two people owe each other variables
-                        var $nameCross_out = [];
-                        var $toWhomCross_out = [];
-                        var $howMuchOwedCross_out = [];
-                        var $forWhatCross_out = [];
-
-                        //circular debt variables
-                        var $howMuchOwedCirc_out = [];
-                        var $nameCirc_out = [];
-                        var $toWhomCirc_out = [];
-                        var $forWhatCirc_out = [];
-
-                        //single debt variables
-                        var $nameSingle_out = [];
-                        var $howMuchOwedSingle_out = [];
-                        var $toWhomSingle_out = [];
-                        var $forWhatSingle_out = [];
-                        
-                        //ignore if the payer and payee are the same name
-                        if (($name_val_a == $toWhom_val_a) || ($name_val_b == $toWhom_val_b)) {
-                            continue;
-                        }
-
-                        //consolidate lines that have the same payer and payee fields
-                        else if (($name_val_a == $name_val_b) && ($toWhom_val_a == $toWhom_val_b)) {
-                            
-                            // If name exists in $nameSame_out array
-                            if ($nameSame_out.indexOf($name_val_a) != -1) {
-                                // Find index of existing name
-                                var $index = $nameSame_out.indexOf($name_val_a);
-                                // Add amounts and for what to existing names 
-                                $nameSame_out[$index] = $name_val_a;
-                                $howMuchOwedSame_out[$index] += howMuchOwed_val_b;
-                                $toWhom[index] = $toWhom_val_a;
-                                if ($forWhatSame_out.indexOf($forWhat_val_a) = -1) {
-                                    $forWhatSame_out[index] += $forWhat_val_a;
-                                }
-                                $forWhatSame_out[index] += ', ' + $forWhat_val_b;
-                            }
-
-                            // Insert new name into $nameSame_out array
-                            else {
-                                $nameSame_out.push($name_val_a);
-                                var $howMuchOwed_temp = $howMuchOwed_val_a + $howMuchOwed_val_b;
-                                $howMuchOwedSame_out.push($howMuchOwed_temp);
-                                $toWhomSame_out.push($toWhom_val_a);
-                                //If $forWhat doesn't contain item, add it, then add forWhat_val_b
-                                if ($forWhatSame_out.indexOf($forWhat_val_a) == -1) {
-                                    $forWhatSame_out.push($forWhat_val_a);
-                                }
-                                $forWhatSame_out.push($forWhat_val_b);
-                            }
-                        }
-
-                        //if two people owe each other, figure out difference
-                        else if (($name_val_a == $toWhom_val_b) && ($name_val_b == $toWhom_val_a)) {
-                            
-                            var $howMuchOwedCross_temp = 0;
-                            //If person A owes more than person B, add person A to array
-                            if ($howMuchOwed_val_b < $howMuchOwed_val_a) {
-                                if ($nameCross_out.indexOf($name_val_a) != -1) {
-                                    var $index = $nameCross_out.indexOf($name_val_a);
-                                    $nameCross_out[$index] = $name_val_a;
-                                    $howMuchOwedCross_out[$index] == $howMuchOwed_val_a - $howMuchOwed_val_b;
-                                    $toWhomCross_out[$index] = $toWhom_val_a;
-                                    $forWhatCross_out[$index] = $forWhat_val_a + ' minus the cost of ' + $forWhat_val_b;
-                                }
-                                else if ($nameCross_out.indexOf($name_val_a) = -1) {
-                                    $nameCross_out.push($name_val_a);
-                                    $howMuchOwedCross_temp == $howMuchOwed_val_a - $howMuchOwed_val_b;
-                                    $howMuchOwedCross_out.push($howMuchOwedCross_temp);
-                                    $toWhomCross_out.push($toWhom_val_a);
-                                    $forWhatCross_temp = $forWhat_val_a + ' minus the cost of ' + $forWhat_val_b;
-                                    $forWhatCross_out.push($forWhatCross_temp);
-                                }
-                            }
-
-                            //If person B owes more than person A, add person B to array
-                            else if ($howMuchOwed_val_a < $howMuchOwed_val_b) {
-                                if ($nameCross_out.indexOf($name_val_b) != -1) {
-                                    var $index = $nameCross_out.indexOf($name_val_b);
-                                    $nameCross_out[$index] = $name_val_b;
-                                    $howMuchOwedCross_out[$index] == $howMuchOwed_val_b - $howMuchOwed_val_a;
-                                    $toWhomCross_out[$index] = $toWhom_val_b;
-                                    $forWhatCross_out[$index] = $forWhat_val_b + ' minus the cost of ' + $forWhat_val_a;
-                                }
-                                else if ($nameCross_out.indexOf($name_val_b) = -1) {
-                                    $nameCross_out.push($name_val_b);
-                                    $howMuchOwedCross_temp == $howMuchOwed_val_b - $howMuchOwed_val_a;
-                                    $howMuchOwedCross_out.push($howMuchOwedCross_temp);
-                                    $toWhomCross_out.push($toWhom_val_b);
-                                    $forWhatCross_temp = $forWhat_val_b + ' minus the cost of ' + $forWhat_val_a;
-                                    $forWhatCross_out.push($forWhatCross_temp);
-                                }
-                            }
-
-                            //If person A and person B's debts cancel out, move on
-                            else {
-                                continue;
-                            }
-                        }
-
-                        //Circular debts
-                        //If Person A owes more than Person B, push to respective arrays.
-                        else if (($toWhom_val_a = $name_val_b) && ($howMuchOwed_val_a >= $howMuchOwed_val_b)) {
-                            var $howMuchOwed_temp_a = $howMuchOwed_val_a - $howMuchOwed_val_b;
-                            var $howMuchOwed_temp_b = $howMuchOwed_val_b;
-                            $howMuchOwedCirc_out.push($howMuchOwed_temp_a);
-                            $howMuchOwedCirc_out.push($howMuchOwed_temp_b);
-                            var $nameCirc_temp_a = $name_val_a;
-                            var $nameCirc_temp_b = $name_val_b;
-                            $nameCirc_out.push($nameCirc_temp_a);
-                            $nameCirc_out.push($nameCirc_temp_b);
-                            var $toWhomCirc_temp_a = $toWhom_val_a;
-                            var $toWhomCirc_temp_b = $toWhom_val_b;
-                            $toWhomCirc_out.push($toWhomCirc_temp_a);
-                            $toWhomCirc_out.push($toWhomCirc_temp_b);
-                            var $forWhatCirc_temp_a = $forWhat_val_a;
-                            var $forWhatCirc_temp_b = $forWhat_val_b;
-                            $forWhatCirc_out.push($forWhatCirc_temp_a);
-                            $forWhatCirc_out.push($forWhatCirc_temp_b);
-                        }
-
-                        //If Person A owes less than Person B, push to respective arrays.
-                        else if (($toWhom_val_a = $name_val_b) && ($howMuchOwed_val_a < $howMuchOwed_val_b)) {
-                            var $nameCirc_temp_a = $name_val_b;
-                            var $nameCirc_temp_b = $name_val_a;
-                            $nameCirc_out.push($nameCirc_temp_a);
-                            $nameCirc_out.push($nameCirc_temp_b);
-                            var $howMuchOwed_temp_a = $howMuchOwed_val_b - $howMuchOwed_val_a;
-                            var $howMuchOwed_temp_b = $howMuchOwed_val_a;
-                            $howMuchOwedCirc_out.push($howMuchOwed_temp_a);
-                            $howMuchOwedCirc_out.push($howMuchOwed_temp_b);
-                            var $toWhomCirc_temp_a = $toWhom_val_b;
-                            var $toWhomCirc_temp_b = $toWhom_val_a;
-                            $toWhomCirc_out.push($toWhomCirc_temp_a);
-                            $toWhomCirc_out.push($toWhomCirc_temp_b);
-                            var $forWhatCirc_temp_a = $forWhat_val_b;
-                            var $forWhatCirc_temp_b = $forWhat_val_a;
-                            $forWhatCirc_out.push($forWhatCirc_temp_a);
-                            $forWhatCirc_out.push($forWhatCirc_temp_b);
-                        }
-
-                        else {
-                            $nameSingle_out.push($name_val_a);
-                            $howMuchOwedSingle_out.push($howMuchOwed_val_a);
-                            $toWhomSingle_out.push($toWhom_val_a);
-                            $forWhatSingle_out.push($forWhat_val_a);
-                        }
-                        
-                    }
-                }
-                
-
-                var $same_out;
-                var $cross_out;
-                var $circ_out;
-                var $single_out;
-                var num;
-
-                for (k = 0; num = $nameSame_out.length, k < num; k++) {
-                    $same_out = $nameSame_out[k] + ' owes ' + $toWhomSame_out[k] + ' $' + $howMuchOwedSame_out[k] + ' for ' + $forWhatSame_out[k] + '.<p></p>'; 
-                }
-
-                for (l = 0; num = $nameCross_out.length, k < num; k++) {
-                    $cross_out = $nameCross_out[k] + ' owes ' + $toWhomCross_out[k] + ' $' + $howMuchOwedCross_out[k] + ' for ' + $forWhatCross_out[k] + '.<p></p>'; 
-                }
-
-                for (m = 0; num = $nameCirc_out.length, k < num; k++) {
-                    $circ_out = $nameCirc_out[k] + ' owes ' + $toWhomCirc_out[k] + ' $' + $howMuchOwedCirc_out[k] + ' for ' + $forWhatCirc_out[k] + '.<p></p>'; 
-                }
-
-                for (p = 0; num = $nameSingle_out.length, k < num; k++) {
-                    $single_out = $nameSingle_out[k] + ' owes ' + $toWhomSingle_out[k] + ' $' + $howMuchOwedSingle_out[k] + ' for ' + $forWhatSingle_out[k] + '.<p></p>'; 
-                }
-
-
-
-                // foreach($same_out) {
-                //     $same_out = $nameSame_out + ' owes ' + $toWhomSame_out + ' $' + $howMuchOwedSame_out + ' for ' + $forWhatSame_out + '.<p></p>';
-                // }
-
-                // foreach($cross_out) {
-                //     $cross_out = $nameCross_out + ' owes ' + $toWhomCross_out + ' $' + $howMuchOwedCross_out + ' for ' + $forWhatCross_out + '.<p></p>';
-                // }
-
-                // foreach($circ_out) {
-                //     $circ_out = $nameCirc_out + ' owes ' + $toWhomCirc_out + ' $' + $howMuchOwedCirc_out + ' for ' + $forWhatCirc_out + '.<p></p>';
-                // }
-
-                // foreach($single_out) {
-                //     $single_out = $nameSingle_out + ' owes ' + $toWhomSingle_out + ' $' + $howMuchOwedSingle_out + ' for ' + $forWhatSingle_out + '.<p></p>';
-                // }
-
-
-                $('#results').append($same_out + $cross_out + $circ_out + $single_out);
-            }});
-    });
-
-        
-    // function calculate(callback, keywords) {
-
-    //   $.ajax({
-    //     url: api.root + "/discover/movie",
-    //     data: {
-    //       api_key: api.token,
-    //       with_keywords: keywords
-    //     },
-    //     success: function(response) {
-    //       model.browseItems = response.results;
-    //       callback(response);
-    //     }
-    //   });
-    // }
+// Sort receives and owes by largest to smallest debt
+		var $pays = sortObject(owes);
+		var $receives = sortObject(gets);	
+		
+// Perform all the math calculations in order from largest to smallest
+		while (($pays.length && $receives.length) > 0) {
+// If payer owes more money than receiver receives, subtract receive amount from pay amount, remove receive amount from array
+			if ($pays[0].debt > $receives[0].debt) {
+				var $payerMore = '<div>' + $pays[0].name + ' owes ' + $receives[0].name + ' ' + formatCurrency($receives[0].debt) + ' for ' + $pays[0].items.join("\, ") + '</div>';
+				console.log($payerMore);
+				$results.append($payerMore);
+				$pays[0].debt -= $receives[0].debt;
+				$receives[0].debt -= $receives[0].debt;
+				$receives.shift();
+			}
+// If receiver receives more money than payer owes, adjust new receive amount and zero out pay amount, remove pay amount from array 
+			else if ($pays[0].debt < $receives[0].debt) {
+				var $receiverMore = '<div>' + $pays[0].name + ' owes ' + $receives[0].name + ' ' + formatCurrency($pays[0].debt) + ' for ' + $pays[0].items.join("\, ") + '</div>';
+				console.log($receiverMore);
+				$results.append($receiverMore);
+				$receives[0].debt -= $pays[0].debt;
+				$pays[0].debt -= $pays[0].debt;
+				$pays.shift();
+			}
+// If payer owes the same amount that the receiver receives, zero out both receive and pay amounts, remove pay and receive amounts
+			else if (($pays[0].debt == $receives[0].debt) && (($pays[0].debt || $receives[0].debt) > 0)) {
+				var $payerEqualReceiver = '<div>' + $pays[0].name + ' owes ' + $receives[0].name + ' ' + formatCurrency($receives[0].debt) + ' for ' + $pays[0].items.join("\, ") + '</div>';
+				console.log($payerEqualReceiver);
+				$results.append($payerEqualReceiver);
+				$pays[0].debt -= $pays[0].debt;
+				$receives[0].debt -= $receives[0].debt;
+				$pays.shift();
+				$receives.shift();
+			}
+// If payer owes zero, debts were assumed during merge. remove pay amount
+			else if ($pays[0].debt == 0) {
+				var $payerZero = '<div>' + $pays[0].name + "'s debts were cancelled out for " + $pays[0].items.join("\, ") + '</div>';
+				console.log($payerZero);
+				$results.append($payerZero);
+				$pays.shift();
+			}
+// If receiver receives zero, remove receive amount
+			else if ($receives[0].debt == 0) {
+				var $receiverZero = '<div>' + $receives[0].name + "'s debts were cancelled out for " + $receives[0].items.join("\, ") + '</div>';
+				console.log($receiverZero);
+				$results.append($receiverZero);
+				$receives.shift();
+			}
+		}	
+	});
 });
