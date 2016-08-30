@@ -20,15 +20,17 @@
   <body>
     <header class="jumbotron">
       <h1>Who Owes Who</h1>
-      <p class="text-muted">Figure out who owes who what</p>
+      <p class="text-muted">Settle your debts in fewer steps!</p>
       <div class="results"></div>
     </header>
 
-    <form onsubmit="return false;" class="form" id="form" action="js/formula.js" method="post">
-      <div class="fields">
-      </div>
-      <p></p>
-      <input id="calculate" type="submit" value="Now, who owes who?">
+  <span class="container-fluid">
+    <form onsubmit="return false;" class="form-inline" id="form" action="js/formula.js" method="post">
+        <div class="form-group">
+        </div>
+        <input id="calculate" type="submit" class="btn btn-info" value="Now, who owes who?">
     </form>
+  </span>
+
   </body>
 </html>

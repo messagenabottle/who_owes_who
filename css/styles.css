@@ -1,73 +1,26 @@
-#browse-carousel {
-    max-width: 300px;
-    margin: auto;
+body {
+	
 }
 
-
 .jumbotron {
+	background-color: lightgreen;
+	background-repeat: no-repeat;
 	text-align: center;
 	margin-bottom: 1%;
 }
 
-
-.well {
-	background: red;
-	color: white;
-	border-width: 0px;
+.jumbotron::after {
+	content: "";
+	background: url('01-throwing-away-money.jpg');
+	opacity: 0.2;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	position: absolute;
+	z-index: -1;   
 }
 
-
-.carousel-inner {
-	padding-left: 0px;
-}
-
-#add-to-watchlist {
-	width: 100%;
-}
-
-
-#section-watchlist li {
-	padding: 0px;
-	margin: 0px 4% 4% 0px;
-	width: 160px;
-}
-
-
-#section-watchlist li button {
-	width: 100%;
-	margin-top: 10px;
-}
-
-
-#section-watchlist ul {
-	text-align: center;
-}	
-
-
-.main-content {
-	color: gray;
-}
-
-#section-browse {
-	background: black;	
-}
-
-#section-browse form {
-	margin-bottom: 2%;
-}
-
-section header {
-	margin-bottom: 10px;
-}
-
-section {
-	padding: 2%;
-}
-
-* {
-  .border-radius(0) !important;
-}
-
-#field {
-    margin-bottom:20px;
+.container-fluid {
+	/*Work on this: position: center;*/
 }

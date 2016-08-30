@@ -46,17 +46,17 @@ function sortObject(obj) {
 
 $(document).ready(function() {
 // Field variables
-    var $fromWhom = '<input autocomplete="off" class="input" id="fromWhom" name="fromWhom" type="text" placeholder="From whom">';
-    var $debt = '<input autocomplete="off" class="input" id="debt" name="debt" type="text" placeholder="Debt">';
-    var $toWhom = '<input autocomplete="off" class="input" id="toWhom" name="toWhom" type="text" placeholder="To whom">';
-    var $forWhat = '<input autocomplete="off" class="input" id="forWhat" name="forWhat" type="text" placeholder="For what">';
-	var $addButton = '<button id="addButton" type="button">+</button>';
-	var $removeButton = '<button id="removeButton" type="button">-</button>';
+    var $fromWhom = '<div class="col-xs-3"><input autocomplete="off" class="form-control" id="fromWhom" name="fromWhom" type="text" placeholder="From whom"></div>';
+    var $debt = '<div class="col-xs-2"><label class="sr-only">Amount</label><div class="input-group"><div class="input-group-addon">$</div><input autocomplete="off" type="number" min="0" step="0.25" class="form-control" id="debt" name="debt" placeholder="Debt"></div></div>';
+    var $toWhom = '<div class="col-xs-3"><input autocomplete="off" class="form-control" id="toWhom" name="toWhom" type="text" placeholder="To whom"></div>';
+    var $forWhat = '<div class="col-xs-3"><input autocomplete="off" class="form-control" id="forWhat" name="forWhat" type="text" placeholder="For what"></div>';
+	var $addButton = '<button class="btn btn-info btn-xs" id="addButton" type="button">+</button>';
+	var $removeButton = '<button class="btn btn-warning btn-xs" id="removeButton" type="button">-</button>';
 
 // Establish field counting and insert first field	
 	var $count = 1;
 	var $field = $('#field' + $count);
-	var $fields = $('.fields');
+	var $fields = $('.form-group');
 	var $firstIOU = '<div id="field' + $count + '">' + $fromWhom + $debt + $toWhom + $forWhat + $addButton + $removeButton + '</div>';
 	$fields.append($firstIOU);
 
@@ -93,12 +93,17 @@ $(document).ready(function() {
 
 // Loops through fields and get inputs		
 		for (i=1; i <= $count; i++) {
-			var $fromWhom = $('#field' + i).children('#fromWhom').val();
-			var $debt = parseFloat($('#field' + i).children('#debt').val());
-			var $toWhom = $('#field' + i).children('#toWhom').val();
-			var $forWhat = $('#field' + i).children('#forWhat').val();
+			var $fromWhom = $('#field' + i).find('#fromWhom').val();
+			var $debt = $('#field' + i).find('#debt').val();
+			var $toWhom = $('#field' + i).find('#toWhom').val();
+			var $forWhat = $('#field' + i).find('#forWhat').val();
 
-// !! Fix doubling if you click Calculate twice !!
+// Validate input fields
+			if ($fromWhom === "" || $debt === "" || $toWhom === "" || $forWhat === "" || $debt < 0) {
+				$results.append("Please complete all fields and use positive dollar amounts.");
+				break;
+			}
+
 // Merge the same persons who owe money
 			if (owes.hasOwnProperty($fromWhom)) {
 				owes[$fromWhom].debt += $debt;
@@ -155,7 +160,7 @@ $(document).ready(function() {
 				$pays.shift();
 			}
 // If payer owes the same amount that the receiver receives, zero out both receive and pay amounts, remove pay and receive amounts
-			else if (($pays[0].debt == $receives[0].debt) && (($pays[0].debt || $receives[0].debt) > 0)) {
+			else if (($pays[0].debt === $receives[0].debt) && (($pays[0].debt > 0) || ($receives[0].debt > 0))) {
 				var $payerEqualReceiver = '<div>' + $pays[0].name + ' owes ' + $receives[0].name + ' ' + formatCurrency($receives[0].debt) + ' for ' + $pays[0].items.join("\, ") + '</div>';
 				console.log($payerEqualReceiver);
 				$results.append($payerEqualReceiver);
