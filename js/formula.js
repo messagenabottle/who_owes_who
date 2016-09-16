@@ -46,19 +46,20 @@ function sortObject(obj) {
 
 $(document).ready(function() {
 // Field variables
-    var $fromWhom = '<div class="col-xs-3"><input autocomplete="off" class="form-control" id="fromWhom" name="fromWhom" type="text" placeholder="From whom"></div>';
-    var $debt = '<div class="col-xs-2"><label class="sr-only">Amount</label><div class="input-group"><div class="input-group-addon">$</div><input autocomplete="off" type="number" min="0" step="0.25" class="form-control" id="debt" name="debt" placeholder="Debt"></div></div>';
-    var $toWhom = '<div class="col-xs-3"><input autocomplete="off" class="form-control" id="toWhom" name="toWhom" type="text" placeholder="To whom"></div>';
-    var $forWhat = '<div class="col-xs-3"><input autocomplete="off" class="form-control" id="forWhat" name="forWhat" type="text" placeholder="For what"></div>';
-	var $addButton = '<button class="btn btn-info btn-xs" id="addButton" type="button">+</button>';
-	var $removeButton = '<button class="btn btn-warning btn-xs" id="removeButton" type="button">-</button>';
+    var $fromWhom = '<span><input autocomplete="off" class="form-control" id="fromWhom" name="fromWhom" type="text" placeholder="From whom"></span>';
+    var $debt = '<span><label class="sr-only">Amount</label><span class="input-group"><span class="input-group-addon">$</span><input autocomplete="off" type="number" min="0" step="0.25" class="form-control" id="debt" name="debt" placeholder="Debt"></span></span>';
+    var $toWhom = '<span><input autocomplete="off" class="form-control" id="toWhom" name="toWhom" type="text" placeholder="To whom"></span>';
+    var $forWhat = '<span><input autocomplete="off" class="form-control" id="forWhat" name="forWhat" type="text" placeholder="For what"></span>';
+	var $addButton = '<div class="btn-group"><button class="btn btn-link" id="addButton" type="button">Add a Debt</button></div>';
+	var $removeButton = '<div class="btn-group"><button class="btn btn-link" id="removeButton" type="button">Remove a Debt</button></div>';
 
 // Establish field counting and insert first field	
 	var $count = 1;
 	var $field = $('#field' + $count);
 	var $fields = $('.form-group');
-	var $firstIOU = '<div id="field' + $count + '">' + $fromWhom + $debt + $toWhom + $forWhat + $addButton + $removeButton + '</div>';
+	var $firstIOU = '<div id="field' + $count + '">' + $fromWhom + $debt + $toWhom + $forWhat + '</div>';
 	$fields.append($firstIOU);
+	$('#addRemove').html($addButton + $removeButton);
 
 // Add field
 	$('#addButton').click(function() {
@@ -94,7 +95,7 @@ $(document).ready(function() {
 // Loops through fields and get inputs		
 		for (i=1; i <= $count; i++) {
 			var $fromWhom = $('#field' + i).find('#fromWhom').val();
-			var $debt = $('#field' + i).find('#debt').val();
+			var $debt = parseFloat($('#field' + i).find('#debt').val());
 			var $toWhom = $('#field' + i).find('#toWhom').val();
 			var $forWhat = $('#field' + i).find('#forWhat').val();
 
@@ -120,6 +121,8 @@ $(document).ready(function() {
 				gets[$toWhom] = new Gets($toWhom, $debt, $forWhat);
 			}
 		}
+		console.log(owes);
+		console.log(gets);
 
 // If someone owes and gets money, subtract what they get from what they owe or vise-versa
 		for (var owes_gets in owes) {

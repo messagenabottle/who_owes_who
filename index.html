@@ -1,36 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+
     <title>Who Owes Who</title>
     
     <!-- JQuery Source -->
     <script src="https://code.jquery.com/jquery-2.2.3.js"></script>  
 
-    <!-- Bootstrap Script-->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    
+    <!-- Formula Source -->
+    <script src="js/formula.js"></script>
+
+    <!-- Bootstrap Link-->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- Stylesheet Link -->
     <link rel="stylesheet" href="css/styles.css"/>
 
-    <!-- Formula Source -->
-    <script src="js/formula.js"></script>
+    <!-- Google Fonts Link -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Oswald:700">
+
   </head>
 
   <body>
-    <header class="jumbotron">
-      <h1>Who Owes Who</h1>
-      <p class="text-muted">Settle your debts in fewer steps!</p>
-      <div class="results"></div>
-    </header>
+    <div class="container-fluid">
+      <header class="jumbotron">
+            <h2>Who Owes Who</h2>
+            <h4 class="text-muted">Settle your debts in fewer steps!</h4>
+      </header>
+    </div>
 
-  <span class="container-fluid">
-    <form onsubmit="return false;" class="form-inline" id="form" action="js/formula.js" method="post">
-        <div class="form-group">
+    <!-- Form field -->
+    <div class="container">
+      
+      <div class="row">
+      <div class="col-md-8">
+          <form onsubmit="return false;" class="form-inline" id="form" action="js/formula.js" method="post">
+            <div class="form-group"></div>
+          </form>
+      </div>
+
+      <!-- Submit debts button -->
+      <div class="col-md-4">
+        <div class="well">
+          <div class="btn-group btn-group-justified" id="addRemove"></div>
+          <br>
+          <div>
+          <input id="calculate" type="submit" class="btn btn-primary btn-block" value="Now, who owes who?">
+          </div>
+          <br>
+          <div class="results"></div>
         </div>
-        <input id="calculate" type="submit" class="btn btn-info" value="Now, who owes who?">
-    </form>
-  </span>
+      </div>
+      </div>
+    </div>
+
 
   </body>
 </html>
