@@ -1,0 +1,26 @@
+
+// Store in debts column
+{
+	{
+		from : 'mark',
+		debt : 29.00,
+		to : 'dan',
+		for : 'item 1',
+	},
+	{
+		from : 'mark',
+		debt : 29.00,
+		to : 'dan',
+		for : 'item 1',
+	}
+}
+
+// Consolidated Debt column
+{
+	{
+		from : 'mark',
+		debt : 3.00,
+		to : 'dan',
+		status : 'paid'
+	}
+}
