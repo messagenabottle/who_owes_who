@@ -150,28 +150,8 @@ $(document).ready(function() {
 // Perform all the math calculations in order from largest to smallest
 		while (($pays.length || $receives.length) > 0) {
 
-// If payer owes zero, debts were assumed during merge. remove pay amount
-			if ($pays[0] !== undefined && $pays[0].debt == 0) {
-				var $payerZero = '<div>' + $pays[0].name + "'s debts were cancelled out for " + $pays[0].items.join("\, ") + '</div>';
-				// console.log($payerZero);
-				$results.append($payerZero);
-				$pays.shift();
-				// console.log("paysCancelled");
-				// console.log($pays.length);
-				// console.log($receives.length);
-			}
-// If receiver receives zero, remove receive amount
-			else if ($receives[0] !== undefined && $receives[0].debt == 0) {
-				var $receiverZero = '<div>' + $receives[0].name + "'s debts were cancelled out for " + $receives[0].items.join("\, ") + '</div>';
-				// console.log($receiverZero);
-				$results.append($receiverZero);
-				$receives.shift();
-				// console.log("receivesCancelled");
-				// console.log($pays.length);
-				// console.log($receives.length);
-			}
 // If payer owes more money than receiver receives, subtract receive amount from pay amount, remove receive amount from array
-			else if ($pays[0].debt > $receives[0].debt) {
+			if ($pays[0].debt > $receives[0].debt) {
 				var $payerMore = '<div>' + $pays[0].name + ' owes ' + $receives[0].name + ' ' + formatCurrency($receives[0].debt) + ' for ' + $pays[0].items.join("\, ") + '</div>';
 				// console.log($payerMore);
 				$results.append($payerMore);
@@ -204,6 +184,26 @@ $(document).ready(function() {
 				$pays.shift();
 				$receives.shift();
 				// console.log("Equal");
+				// console.log($pays.length);
+				// console.log($receives.length);
+			}
+// If payer owes zero, debts were assumed during merge. remove pay amount
+			else if ($pays[0] !== undefined && $pays[0].debt == 0) {
+				var $payerZero = '<div>' + $pays[0].name + "'s debts were cancelled out for " + $pays[0].items.join("\, ") + '</div>';
+				// console.log($payerZero);
+				$results.append($payerZero);
+				$pays.shift();
+				// console.log("paysCancelled");
+				// console.log($pays.length);
+				// console.log($receives.length);
+			}
+// If receiver receives zero, remove receive amount
+			else if ($receives[0] !== undefined && $receives[0].debt == 0) {
+				var $receiverZero = '<div>' + $receives[0].name + "'s debts were cancelled out for " + $receives[0].items.join("\, ") + '</div>';
+				// console.log($receiverZero);
+				$results.append($receiverZero);
+				$receives.shift();
+				// console.log("receivesCancelled");
 				// console.log($pays.length);
 				// console.log($receives.length);
 			}
