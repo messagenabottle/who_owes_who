@@ -46,10 +46,10 @@ function sortObject(obj) {
 
 $(document).ready(function() {
 // Field variables
-    var $fromWhom = '<div class="form-group col-sm-12 col-md-3"><span class="input-group"><input autocomplete="off" class="form-control" id="fromWhom" name="fromWhom" type="text" placeholder="From whom"></span></div>';
-    var $debt = '<div class="form-group col-sm-12 col-md-3"><span class="input-group"><label class="sr-only">Amount</label><span class="input-group"><span class="input-group-addon">$</span><input autocomplete="off" type="number" min="0" step="0.25" class="form-control" id="debt" name="debt" placeholder="Debt"></span></span></div>';
-    var $toWhom = '<div class="form-group col-sm-12 col-md-3"><span class="input-group"><input autocomplete="off" class="form-control" id="toWhom" name="toWhom" type="text" placeholder="To whom"></span></div>';
-    var $forWhat = '<div class="form-group col-sm-12 col-md-3"><span class="input-group"><input autocomplete="off" class="form-control" id="forWhat" name="forWhat" type="text" placeholder="For what"></span></div>';
+    var $fromWhom = '<div class="form-group col-sm-12 col-md-3 ipad"><span class="input-group"><input autocomplete="off" class="form-control" id="fromWhom" name="fromWhom" type="text" placeholder="From whom"></span></div>';
+    var $debt = '<div class="form-group col-sm-12 col-md-3 ipad"><span class="input-group"><label class="sr-only">Amount</label><span class="input-group"><span class="input-group-addon">$</span><input autocomplete="off" type="number" min="0" step="0.25" class="form-control" id="debt" name="debt" placeholder="Debt"></span></span></div>';
+    var $toWhom = '<div class="form-group col-sm-12 col-md-3 ipad"><span class="input-group"><input autocomplete="off" class="form-control" id="toWhom" name="toWhom" type="text" placeholder="To whom"></span></div>';
+    var $forWhat = '<div class="form-group col-sm-12 col-md-3 ipad"><span class="input-group"><input autocomplete="off" class="form-control" id="forWhat" name="forWhat" type="text" placeholder="For what"></span></div>';
 	var $addButton = '<div class="btn-group"><button class="add_Btn" id="addButton" type="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Debt</button></div>';
 	var $removeButton = '<div class="btn-group"><button class="remove_Btn" id="removeButton" type="button"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Debt</button></div>';
 
