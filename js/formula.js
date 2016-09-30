@@ -105,6 +105,10 @@ $(document).ready(function() {
 				$results.append("Please complete all fields and use positive dollar amounts.");
 				break;
 			}
+			else if ($.isNumeric($debt) == false) {
+				$results.append("Please enter only number values for your debts.");
+				break;
+			}
 
 // Merge the same persons who owe money
 			if (owes.hasOwnProperty($fromWhom)) {
