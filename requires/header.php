@@ -26,7 +26,7 @@
   </head>
 
   <body>
-    
+    <header id="header">
       <div class="navigation">
         <nav class="navbar navbar-inverse">
           <div class="container-fluid">
@@ -81,34 +81,6 @@
           </div><!-- /.container-fluid -->
         </nav>
       </div>
-    
-    </br>
-    
-    <!-- Form field -->
-    <div class="container-fluid">
-      
-      <div class="row">
-      <div class="col-sm-12 col-md-8">
-          <form onsubmit="return false;" class="form-inline" id="form" action="js/formula.js" method="post">
-            <div class="form"></div>
-          </form>
-          </br>
-      </div>
-
-      <!-- Submit debts button -->
-      <div class="col-sm-12 col-md-4">
-        <div class="well" id="calculateResults">
-          <div class="btn-group btn-group-justified" id="addRemove"></div>
-          <br>
-          <div>
-          <input id="calculate" type="submit" class="submit_Btn" value="Now, who owes who?">
-          </div>
-          <br>
-          <div class="results"></div>
-        </div>
-      </div>
-      </div>
-    </div>
-    
+    </header>
   </body>
 </html>

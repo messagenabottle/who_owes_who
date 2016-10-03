@@ -5,10 +5,11 @@ body {
 }
 
 /*Top Navigation Bar - font style*/
-.navigation {
+#header {
 	font-family: 'Lato', sans-serif;
 	border-bottom: 5px solid #8EDC9D;
 	border-top: 5px solid #8EDC9D;
+	margin-bottom: 2em;
 }
 
 /*Body - Opaque Flying Money Graphic after Top Navigation Bar*/
