@@ -1,29 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    
-    <title>Who Owes Who: Settle your debts in fewer steps!</title>
-    
-    <!-- JQuery Source -->
-    <script src="https://code.jquery.com/jquery-2.2.3.js"></script>  
-
-    <!-- Formula Source -->
-    <script src="js/formula.js"></script>
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="js/bootstrap/bootstrap.js"></script>
-
-    <!-- Stylesheet Link -->
-    <link rel="stylesheet" href="css/styles.css"/>
-    <!-- Google Fonts Link -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Oswald:700">
-
-  </head>
+  <?php
+  require_once '../core/database/session.php';
+  require_once '../core/database/functions.php';
+  $userRow = get_user();
+  ?>
 
   <body>
     <header id="header">
@@ -39,7 +18,7 @@
                 <span class="icon-bar"></span>
               </button>
               <div class="logo">
-                <a class="navbar-brand" href="https://messagenabottle.myds.me/whooweswho">
+                <a class="navbar-brand" href="../index.php">
                   <span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span>
                   <span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>
                   <span id="brand">WHO OWES WHO</span>
@@ -56,22 +35,29 @@
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Debts<span class="caret"></span></a>
                   <ul class="dropdown-menu">
                     <li><a href="#">New IOU Set</a></li>
-                    <li><a href="#">Load Old IOUs</a></li>
+                    <li><a href="/views/load.php">Load Old IOUs</a></li>
                     <li><a href="#">Print This IOU</a></li>
                     <li><a href="#">Share This IOU</a></li>
                   </ul>
                 </li>
-                <li><a href="#">History</a></li>
-                <li><a href="#">I don't get this...</a></li>
+                <li><a href="/views/history.php">History</a></li>
+                <li><a href="/views/dont_get.php">I don't get this...</a></li>
                 <li><a>||</a></li>
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Logged in as (User) <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="https://messagenabottle.myds.me/whooweswho/profile">View Profile</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="https://messagenabottle.myds.me/whooweswho/register">Register</a></li>
-                    <li><a href="www.google.com">Log in/out</a></li>
-                  </ul>
+                  <?php if(isset($_SESSION['user'])): ?>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome <?php print($userRow['user_name']); ?><span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="/views/profile.php">View Profile</a></li>
+                      <li role="separator" class="divider"></li>
+                      <li><a href="../core/database/logout.php?logout=true"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Log Out</a></li>
+                    </ul>
+                  <?php else: ?>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Save your Debts! <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="../core/database/sign-up.php">Register</a></li>
+                      <li><a href="/views/login.php"><span class="glyphicon glyphicon-log-in"></span>&nbsp;Log In</a></li>
+                    </ul>
+                  <?php endif; ?>
                 </li>
               </ul>
             </div><!-- /.navbar-collapse -->

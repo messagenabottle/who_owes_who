@@ -44,49 +44,129 @@ function sortObject(obj) {
     return arr; // returns array
 }
 
+
+var formula = {
+	count : 0,
+};
+
+formula.addRow = function($fromWhom, $debt, $toWhom, $forWhat) {
+	$fromWhom = (typeof $fromWhom === 'undefined') ? '' : $fromWhom;
+	$debt = (typeof $debt === 'undefined') ? '' : $debt;
+	$toWhom = (typeof $toWhom === 'undefined') ? '' : $toWhom;
+	$forWhat = (typeof $forWhat === 'undefined') ? '' : $forWhat;
+
+    formula.count += 1;
+    var $newIOU = '<div class="fields clearfix" id="field' + formula.count + '">' + $fromWhom + $debt + $toWhom + $forWhat + '</div>';
+    $('.form').append($newIOU);
+    formula.updateIndexIds();
+};
+
+formula.removeRow = function() {
+	if (formula.count > 1) {
+			// $('.form br').last().remove();
+			$('#field' + formula.count).remove();
+			// console.log('remove' + formula.count);
+			formula.count -= 1;
+			formula.updateIndexIds();
+		}
+};
+
+formula.updateIndexIds = function() {
+	$('.form .fields').each(function(index) {
+		var $field = $( this );
+		var count = index + 1;
+
+		$field.prop('id', 'field'+count);
+	});
+};
+
+formula.getFormData = function() {
+	var formData = [];
+	$('.form .fields').each(function(index) {
+		var $field = $( this );
+		
+		formData.push({
+			debtId: $field.find('.debt-id').val(),
+			fromWhom: $field.find('input[name="fromWhom"]').val(),
+			debt: $field.find('input[name="debt"]').val(),
+			toWhom: $field.find('input[name="toWhom"]').val(),
+			forWhat: $field.find('input[name="forWhat"]').val()
+		});	
+	});
+
+	return formData;
+	console.log(formData);
+};
+
+formula.handleFormSubmission = function() {
+	// Add field indexes aka order to formula.getFormData()
+	var data = {
+		action: 'store-debt',
+		formData: formula.getFormData(),
+	}
+
+	$.post('/core/ajax/store-debt.php', data, function(data, textStatus, jqXHR) {
+
+	});
+}
+
 $(document).ready(function() {
+	$( '.form' ).on('submit', function(e) {
+		e.preventDefault();
+
+		formula.updateIndexIds();
+		// Update calculations.
+		formula.handleFormSubmission();
+
+		return false;
+	});
+
 // Field variables
-    var $fromWhom = '<div class="form-group col-sm-12 col-md-3 ipad"><span class="input-group"><input autocomplete="off" class="form-control" id="fromWhom" name="fromWhom" type="text" placeholder="From whom"></span></div>';
-    var $debt = '<div class="form-group col-sm-12 col-md-3 ipad"><span class="input-group"><label class="sr-only">Amount</label><span class="input-group"><span class="input-group-addon">$</span><input autocomplete="off" type="number" min="0" step="0.25" class="form-control" id="debt" name="debt" placeholder="Debt"></span></span></div>';
-    var $toWhom = '<div class="form-group col-sm-12 col-md-3 ipad"><span class="input-group"><input autocomplete="off" class="form-control" id="toWhom" name="toWhom" type="text" placeholder="To whom"></span></div>';
-    var $forWhat = '<div class="form-group col-sm-12 col-md-3 ipad"><span class="input-group"><input autocomplete="off" class="form-control" id="forWhat" name="forWhat" type="text" placeholder="For what"></span></div>';
+    var $fromWhom = '<div class="form-group col-sm-12 col-md-3"><span class="input-group"><input autocomplete="off" class="form-control" id="fromWhom" name="fromWhom" type="text" placeholder="From whom"></span></div>';
+    var $debt = '<div class="form-group col-sm-12 col-md-3"><span class="input-group"><label class="sr-only">Amount</label><span class="input-group"><span class="input-group-addon">$</span><input autocomplete="off" type="number" min="0" step="0.25" class="form-control" id="debt" name="debt" placeholder="Debt"></span></span></div>';
+    var $toWhom = '<div class="form-group col-sm-12 col-md-3"><span class="input-group"><input autocomplete="off" class="form-control" id="toWhom" name="toWhom" type="text" placeholder="To whom"></span></div>';
+    var $forWhat = '<div class="form-group col-sm-12 col-md-3"><span class="input-group"><input autocomplete="off" class="form-control" id="forWhat" name="forWhat" type="text" placeholder="For what"></span></div>';
 	var $addButton = '<div class="btn-group"><button class="add_Btn" id="addButton" type="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Debt</button></div>';
 	var $removeButton = '<div class="btn-group"><button class="remove_Btn" id="removeButton" type="button"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Debt</button></div>';
 
 // Establish field counting and insert first field	
-	var $count = 1;
-	var $field = $('#field' + $count);
-	var $fields = $('.form');
-	var $firstIOU = '<div class="fields" id="field' + $count + '">' + $fromWhom + $debt + $toWhom + $forWhat + '</div>';
-	$fields.append($firstIOU);
 	$('#addRemove').html($addButton + $removeButton);
 
-// Add field
+// Add first field
+	formula.addRow($fromWhom, $debt, $toWhom, $forWhat);
+	// var $field = $('#field' + formula.count);
+	// var $fields = $('.form');
+	// var $firstIOU = '<div class="fields clearfix" id="field' + formula.count + '">' + $fromWhom + $debt + $toWhom + $forWhat + '</div>';
+	// $fields.append($firstIOU);
+	// formula.updateIndexIds();
+
+// Add additional fields
 	$('#addButton').click(function() {
-	    $count += 1;
-	    var $newIOU = '<div class="fields" id="field' + $count + '">' + $fromWhom + $debt + $toWhom + $forWhat + '</div>';
-	    $fields.append($newIOU);
+	    formula.addRow($fromWhom, $debt, $toWhom, $forWhat);
+	//     formula.count += 1;
+	//     var $newIOU = '<div class="fields clearfix" id="field' + formula.count + '">' + $fromWhom + $debt + $toWhom + $forWhat + '</div>';
+	//     $fields.append($newIOU);
+	    // console.log('add: ' + formula.count);
+		// formula.updateIndexIds();
 	});
 
-// Remove field
+// Remove fields
 	$('#removeButton').click(function() {
-		if ($count > 1) {
-			$('.form br').last().remove();
-			$('#field' + $count).remove();
-			$count -= 1;
-		}
+		formula.removeRow();
 	});
 
+// Calculate figures
 	$('#calculate').click(function() {
-// Clear old objects		
+
+	// Clear old objects		
 		for (var clearOwes in owes){
     		if (owes.hasOwnProperty(clearOwes)){
-        	delete owes[clearOwes];
+        		delete owes[clearOwes];
     		}
 		}
 		for (var clearGets in gets){
     		if (gets.hasOwnProperty(clearGets)){
-        	delete gets[clearGets];
+        		delete gets[clearGets];
     		}
 		}
 
@@ -94,11 +174,17 @@ $(document).ready(function() {
 		var $results = $('.results');
 
 // Loops through fields and get inputs		
-		for (i=1; i <= $count; i++) {
+		formula.getFormData;
+		for (i=1; i <= formula.count; i++) {
+			var $debtId = i;
 			var $fromWhom = $('#field' + i).find('#fromWhom').val();
 			var $debt = parseFloat($('#field' + i).find('#debt').val());
 			var $toWhom = $('#field' + i).find('#toWhom').val();
 			var $forWhat = $('#field' + i).find('#forWhat').val();
+// AJAX Request Here?
+			// if (!isset($_SESSION)) {
+			// 	console.log("Debts will be recorded!");
+			// }
 
 // Validate input fields
 			if ($fromWhom === "" || $debt === "" || $toWhom === "" || $forWhat === "" || $debt < 0) {
@@ -126,8 +212,8 @@ $(document).ready(function() {
 				gets[$toWhom] = new Gets($toWhom, $debt, $forWhat);
 			}
 		}
-		// console.log(owes);
-		// console.log(gets);
+		console.log(owes);
+		console.log(gets);
 
 // If someone owes and gets money, subtract what they get from what they owe or vise-versa
 		for (var owes_gets in owes) {
@@ -208,5 +294,6 @@ $(document).ready(function() {
 				// console.log($receives.length);
 			}
 		}	
+
 	});
 });
