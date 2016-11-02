@@ -1,16 +1,15 @@
 <?php
 session_start();
 
-require_once 'class.user.php';
-require_once 'functions.php';
-require_once '../../views/partials/head.php';
-require_once '../../views/navigation.php';
+require_once '../../constants.php';
+require_once WOW_ROOT . '/core/database/functions.php';
+require_once WOW_ROOT . '/partials/header.php';
 
 $user = new USER();
 
 if($user->is_loggedin()!="")
 {
-	$user->redirect('../../views/home.php');
+	$user->redirect(WOW_URL . 'index.php');
 }
 
 if(isset($_POST['btn-signup']))
@@ -88,7 +87,7 @@ if(isset($_POST['btn-signup']))
 			{
 				 ?>
                  <div class="alert alert-info">
-                      <i class="glyphicon glyphicon-log-in"></i> &nbsp; Successfully registered <a href='../../views/login.php'>login</a> here
+                      <i class="glyphicon glyphicon-log-in"></i> &nbsp; Successfully registered <a href='/views/login.php'>login</a> here
                  </div>
                  <?php
 			}
@@ -109,7 +108,7 @@ if(isset($_POST['btn-signup']))
                 </button>
             </div>
             <br />
-            <label>have an account ! <a href="../../views/login.php">Sign In</a></label>
+            <label>have an account ! <a href="<?php echo WOW_URL ?>/views/login.php">Sign In</a></label>
         </form>
        </div>
 </div>

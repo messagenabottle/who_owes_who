@@ -1,7 +1,9 @@
 <?php
 
-    require_once 'partials/header.php';
+    $page_title = "Log In";
 
+    require_once '../constants.php';
+    require_once WOW_ROOT . '/partials/header.php';
 
     if (!isset($_SESSION)) {
         session_start();
@@ -11,18 +13,21 @@
 
     if($login->is_loggedin()!="")
     {
-    	$login->redirect('../index.php');
+    	$login->redirect(WOW_URL . 'index.php');
     }
+
 
     if(isset($_POST['btn-login']))
     {
-    	$uname = strip_tags($_POST['txt_uname_email']);
-    	$umail = strip_tags($_POST['txt_uname_email']);
-    	$upass = strip_tags($_POST['txt_password']);
-    		
+        $uname = strip_tags($_POST['txt_uname_email']);
+        $umail = strip_tags($_POST['txt_uname_email']);
+        $upass = strip_tags($_POST['txt_password']);
+        $url = WOW_URL . 'index.php?account=';
+        $account_id = $_GET['account'];
+            
     	if($login->doLogin($uname,$umail,$upass))
     	{
-    		$login->redirect('../index.php');
+    		$login->redirect($url);
     	}
     	else
     	{
@@ -74,7 +79,7 @@
                 </button>
             </div>  
           	<br />
-                <label>Don't have account yet ! <a href="../core/database/sign-up.php">Sign Up</a></label>
+                <label>Don't have account yet ! <a href="<?php echo WOW_URL ?>/core/database/sign-up.php">Sign Up</a></label>
           </form>
 
         </div>
@@ -82,5 +87,5 @@
     </div>
 
 <?php
-    require_once 'partials/footer.php';
+    require_once WOW_ROOT . '/partials/footer.php';
 ?>

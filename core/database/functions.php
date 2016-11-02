@@ -1,5 +1,6 @@
 <?php
-require_once 'class.user.php';
+
+require_once WOW_ROOT . '/core/database/class.user.php';
 
 function get_user() {
 	// Start session if not already started.
@@ -29,13 +30,13 @@ function get_user() {
 	return $_SESSION['user'];
 }
 
-function get_debts($id) {
+function get_debts($account_id) {
 	$auth_user = new USER();
-	$stmt = $auth_user->runQuery("SELECT * FROM debts WHERE id=:id");
-	$stmt->execute(array(":id"=>$id));
+	$stmt = $auth_user->runQuery("SELECT * FROM debts WHERE account_id=:account_id");
+	$stmt->execute(array(":account_id"=>$account_id));
 	
 
-	return $stmt->fetch(PDO::FETCH_ASSOC);
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 ?>

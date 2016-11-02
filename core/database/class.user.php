@@ -1,6 +1,6 @@
 <?php
 
-require_once 'dbconfig.php';
+require_once WOW_ROOT . '/core/database/dbconfig.php';
 
 class USER
 {	
@@ -88,6 +88,10 @@ class USER
 		session_destroy();
 		unset($_SESSION['user_session']);
 		return true;
+	}
+
+	public function db() {
+		return $this->conn;
 	}
 }
 ?>

@@ -1,8 +1,11 @@
 <?php
-
-	require_once 'partials/header.php';
-	require_once 'partials/body_left.php';
-	require_once 'partials/body_right.php';
+	
+	$page_title = "History";
+	
+	require_once '../constants.php';
+	require_once WOW_ROOT . 'partials/header.php';
+	require_once WOW_ROOT . 'partials/body_left.php';
+	require_once WOW_ROOT . 'partials/body_right.php';
 	$auth_user = new USER();
 
 	$user_id = $_SESSION['user_session'];
@@ -18,4 +21,4 @@
 	</div>
 </div>
 
-<?php require_once 'partials/footer.php'; ?>
+<?php require_once WOW_ROOT . 'partials/footer.php'; ?>
