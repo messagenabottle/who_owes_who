@@ -1,7 +1,7 @@
 # who_owes_who
 A program that totals a list of people's debts to each other and calculates who gets what.<br>
 
-![Example](<iframe width="560" height="315" src="https://www.youtube.com/embed/Bcm9pTK_Kx8" frameborder="0" allowfullscreen></iframe> "Animation that shows sample debts being consolidated")<br><br>
+![Click me for video](https://youtu.be/Bcm9pTK_Kx8 "Animation that shows sample debts being consolidated")<br><br>
 
 Who Owes Who is a circular debt calculator. If a group of people list all the debts owed to each other, it consolidates them into the fewest transactions possible. In the case below, Harry doesn’t have to pay anything because his debts are cancelled out from what he is owed.<br>
 
