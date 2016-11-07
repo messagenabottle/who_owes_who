@@ -1,7 +1,6 @@
 <?php
 
     $page_title = "Log In";
-
     require_once '../constants.php';
     require_once WOW_ROOT . '/partials/header.php';
 
@@ -13,7 +12,7 @@
 
     if($login->is_loggedin()!="")
     {
-    	$login->redirect(WOW_URL . 'index.php');
+        $login->redirect(WOW_URL . 'index.php');
     }
 
 
@@ -25,21 +24,21 @@
         $url = WOW_URL . 'index.php?account=';
         $account_id = $_GET['account'];
             
-    	if($login->doLogin($uname,$umail,$upass))
-    	{
-    		$login->redirect($url);
-    	}
-    	else
-    	{
-    		$error = "Wrong Details !";
-    	}	
+        if($login->doLogin($uname,$umail,$upass))
+        {
+            $login->redirect($url);
+        }
+        else
+        {
+            $error = "Wrong Details !";
+        }   
     }
 
 ?>
 
 <div class="signin-form">
 
-	<div class="container">
+    <div class="container">
       
       <div class="row">
         
@@ -51,15 +50,15 @@
             
             <div id="error">
             <?php
-    			if(isset($error))
-    			{
-    				?>
+                if(isset($error))
+                {
+                    ?>
                     <div class="alert alert-danger">
                        <i class="glyphicon glyphicon-warning-sign"></i> &nbsp; <?php echo $error; ?> !
                     </div>
                     <?php
-    			}
-    		?>
+                }
+            ?>
             </div>
             
             <div class="form-group">
@@ -71,14 +70,14 @@
             <input type="password" class="form-control" name="txt_password" placeholder="Your Password" />
             </div>
            
-         	<hr />
+            <hr />
             
             <div class="form-group">
                 <button type="submit" name="btn-login" class="btn submit_Btn">
-                    	<i class="glyphicon glyphicon-log-in"></i> &nbsp; SIGN IN
+                        <i class="glyphicon glyphicon-log-in"></i> &nbsp; SIGN IN
                 </button>
             </div>  
-          	<br />
+            <br />
                 <label>Don't have account yet ! <a href="<?php echo WOW_URL ?>/core/database/sign-up.php">Sign Up</a></label>
           </form>
 
@@ -87,5 +86,5 @@
     </div>
 
 <?php
-    require_once WOW_ROOT . '/partials/footer.php';
+    require_once WOW_ROOT . 'partials/footer.php';
 ?>

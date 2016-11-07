@@ -23,7 +23,7 @@
 <ul>	
 	<?php foreach ($accounts as $account) { ?>
 	<li>
-		<a href="index.php?account=<?php echo $account['id']; ?>">Debt Account #<?php echo $account['id']; ?></a>
+		<a href="<?php echo WOW_URL ?>?account=<?php echo $account['id']; ?>">IOU #<?php echo $account['id']; ?></a>
 	</li>
 	<?php } ?>
 </ul>

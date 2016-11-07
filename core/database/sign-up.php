@@ -87,7 +87,7 @@ if(isset($_POST['btn-signup']))
 			{
 				 ?>
                  <div class="alert alert-info">
-                      <i class="glyphicon glyphicon-log-in"></i> &nbsp; Successfully registered <a href='/views/login.php'>login</a> here
+                      <i class="glyphicon glyphicon-log-in"></i> &nbsp; Successfully registered <a href='<?php echo WOW_URL ?>views/login.php'>login</a> here
                  </div>
                  <?php
 			}
@@ -108,7 +108,7 @@ if(isset($_POST['btn-signup']))
                 </button>
             </div>
             <br />
-            <label>have an account ! <a href="<?php echo WOW_URL ?>/views/login.php">Sign In</a></label>
+            <label>have an account ! <a href="<?php echo WOW_URL ?>views/login.php">Sign In</a></label>
         </form>
        </div>
 </div>

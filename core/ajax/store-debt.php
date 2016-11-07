@@ -1,7 +1,8 @@
 <?php
-require_once dirname(__DIR__). '/database/functions.php';
 
-// This will need to be a file locatated /core/ajax/store-debt.php
+require_once '../../constants.php';
+require_once WOW_ROOT . '/core/database/functions.php';
+
 if (!isset($_POST['action']) or 'store-debt' !== $_POST['action'] ) {
 	return;
 }
@@ -16,10 +17,10 @@ $auth_user = new USER();
 $user_id = $user['user_id'];
 $account_id = $_POST['accountId'];
 
-// $stmt = $auth_user->runQuery("SELECT id FROM accounts WHERE user_id=:user_id");
-// $stmt->execute(array(":user_id"=>$user_id));
+$stmt = $auth_user->runQuery("SELECT id FROM accounts WHERE user_id=:user_id");
+$stmt->execute(array(":user_id"=>$user_id));
 
-// $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // =====================================
 // Store account in acounts table.
@@ -67,8 +68,10 @@ foreach ($_POST['formData'] as $data) {
 }
 
 
+// ========================================
+// Delete individual IOU from Debts table.
+// ========================================
 // Delete all rows where account_id = $account_id AND debt_id is NOT in $debt_ids.
-
 // if (!empty($debt_ids)) {
 // 		$stmt = $auth_user->runQuery("DELETE FROM debts WHERE account_id=:account_id and id NOT IN (:debt_ids)");
 // 		$stmt->execute(array(
@@ -83,7 +86,3 @@ foreach ($_POST['formData'] as $data) {
 
 echo json_encode(compact('account_id', 'debt_ids', 'deleted_ids'));
 exit();
-
-
-
-
