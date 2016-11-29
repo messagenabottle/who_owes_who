@@ -1,12 +1,15 @@
 <?php
 
+// Require root variables and assets
 require_once '../../constants.php';
 require_once WOW_ROOT . '/core/database/functions.php';
 
+// If not logged in, don't store debt
 if (!isset($_POST['action']) or 'store-debt' !== $_POST['action'] ) {
 	return;
 }
 
+// Start session
 $user = get_user();
 
 if (!$user or !isset($_POST['accountId'])) {
@@ -17,9 +20,11 @@ $auth_user = new USER();
 $user_id = $user['user_id'];
 $account_id = $_POST['accountId'];
 
+// Run MySQL statement to check if user matches stored users
 $stmt = $auth_user->runQuery("SELECT id FROM accounts WHERE user_id=:user_id");
 $stmt->execute(array(":user_id"=>$user_id));
 
+// Gather account details
 $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // =====================================

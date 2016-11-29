@@ -1,3 +1,4 @@
+// Establish Owes and Gets Objects
 var owes = {};
 var gets = {};
 
@@ -44,11 +45,12 @@ function sortObject(obj) {
     return arr; // returns array
 }
 
-
+// Establish counting for adding and subtracting rows
 var formula = {
 	count : 0,
 };
 
+// Add row function
 formula.addRow = function($fromWhom, $debt, $toWhom, $forWhat) {
 	$fromWhom = (typeof $fromWhom === 'undefined') ? '' : $fromWhom;
 	$debt = (typeof $debt === 'undefined') ? '' : $debt;
@@ -61,6 +63,7 @@ formula.addRow = function($fromWhom, $debt, $toWhom, $forWhat) {
     formula.updateIndexIds();
 };
 
+// Remove row function
 formula.removeRow = function() {
 	var $fields = $('#form .fields');
 	if ($fields.length > 1) {
@@ -69,6 +72,7 @@ formula.removeRow = function() {
 		}
 };
 
+// Keep track of number of rows
 formula.updateIndexIds = function() {
 	$('.form .fields').each(function(index) {
 		var $field = $( this );
@@ -77,6 +81,7 @@ formula.updateIndexIds = function() {
 		$field.prop('id', 'field'+count);
 	});
 };
+
 
 $(document).ready(function() {
 	// Field variables
@@ -87,15 +92,15 @@ $(document).ready(function() {
 	var $addButton = '<div class="btn-group"><button class="add_Btn" id="addButton" type="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Debt</button></div>';
 	var $removeButton = '<div class="btn-group"><button class="remove_Btn" id="removeButton" type="button"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Debt</button></div>';
 
-	// Establish field counting and insert first field	
+	// Insert add and remove button functionality
 	$('#addRemove').html($addButton + $removeButton);
 
-	// Add additional fields
+	// Add additional fields when addButton is clicked
 	$('#addButton').click(function() {
 	    formula.addRow($fromWhom, $debt, $toWhom, $forWhat);
 	});
 
-	// Remove fields
+	// Remove field when removeButton is clicked
 	$('#removeButton').click(function() {
 		formula.removeRow();
 	});
@@ -104,7 +109,7 @@ $(document).ready(function() {
 	$('#calculate').click(function() {
 		var formData = [];
 
-		// Clear old objects		
+		// Clear old owes and gets objects		
 		for (var clearOwes in owes){
     		if (owes.hasOwnProperty(clearOwes)){
         		delete owes[clearOwes];
@@ -116,6 +121,7 @@ $(document).ready(function() {
     		}
 		}
 
+		// Clear previous user view results
 		$('.results').empty();
 		var $results = $('.results');
 
@@ -129,6 +135,7 @@ $(document).ready(function() {
 			var $toWhom = $('#field' + i).find('#toWhom').val();
 			var $forWhat = $('#field' + i).find('#forWhat').val();
 			
+			// Push field data to formData object for database
 			formData.push({
 				debtId: $debtId,
 				fromWhom: $fromWhom,
@@ -186,18 +193,31 @@ $(document).ready(function() {
 		
 		// Perform all the math calculations in order from largest to smallest
 		while (($pays.length || $receives.length) > 0) {
+			
+			// Avoid performing function on undefined pays array
 			if ($pays[0] === undefined && $receives.length > 0) {
 				$receives.shift();
-
 				continue;
 			}
 
+			// Avoid performing function on undefined receives array
 			if ($receives[0] === undefined && $pays.length > 0) {
 				$pays.shift();
-
 				continue;
 			}
 
+			// If payer owes zero, debts were assumed during merge. remove pay amount
+			else if ($pays[0] !== undefined && $pays[0].debt == 0) {
+				var $payerZero = '<div>' + $pays[0].name + "'s debts were cancelled out for " + $pays[0].items.join("\, ") + '</div>';
+				$results.append($payerZero);
+				$pays.shift();
+			}
+			// If receiver receives zero, remove receive amount
+			else if ($receives[0] !== undefined && $receives[0].debt == 0) {
+				var $receiverZero = '<div>' + $receives[0].name + "'s debts were cancelled out for " + $receives[0].items.join("\, ") + '</div>';
+				$results.append($receiverZero);
+				$receives.shift();
+			}
 			// If payer owes more money than receiver receives, subtract receive amount from pay amount, remove receive amount from array
 			if ($pays[0].debt > $receives[0].debt) {
 				var $payerMore = '<div>' + $pays[0].name + ' owes ' + $receives[0].name + ' ' + formatCurrency($receives[0].debt) + ' for ' + $pays[0].items.join("\, ") + '</div>';
@@ -220,20 +240,6 @@ $(document).ready(function() {
 				$results.append($payerEqualReceiver);
 				$pays[0].debt -= $pays[0].debt;
 				$receives[0].debt -= $receives[0].debt;
-				$pays.shift();
-				$receives.shift();
-			}
-			// If payer owes zero, debts were assumed during merge. remove pay amount
-			else if ($pays[0] !== undefined && $pays[0].debt == 0) {
-				var $payerZero = '<div>' + $pays[0].name + "'s debts were cancelled out for " + $pays[0].items.join("\, ") + '</div>';
-				$results.append($payerZero);
-				$pays.shift();
-			}
-			// If receiver receives zero, remove receive amount
-			else if ($receives[0] !== undefined && $receives[0].debt == 0) {
-				var $receiverZero = '<div>' + $receives[0].name + "'s debts were cancelled out for " + $receives[0].items.join("\, ") + '</div>';
-				$results.append($receiverZero);
-				$receives.shift();
 			}
 		}	
 
