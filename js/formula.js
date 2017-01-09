@@ -205,19 +205,6 @@ $(document).ready(function() {
 				$pays.shift();
 				continue;
 			}
-
-			// If payer owes zero, debts were assumed during merge. remove pay amount
-			if ($pays[0] !== undefined && $pays[0].debt == 0) {
-				var $payerZero = '<div>' + $pays[0].name + "'s debts were cancelled out for " + $pays[0].items.join("\, ") + '</div>';
-				$results.append($payerZero);
-				$pays.shift();
-			}
-			// If receiver receives zero, remove receive amount
-			if ($receives[0] !== undefined && $receives[0].debt == 0) {
-				var $receiverZero = '<div>' + $receives[0].name + "'s debts were cancelled out for " + $receives[0].items.join("\, ") + '</div>';
-				$results.append($receiverZero);
-				$receives.shift();
-			}
 			// If payer owes more money than receiver receives, subtract receive amount from pay amount, remove receive amount from array
 			if ($pays[0].debt > $receives[0].debt) {
 				var $payerMore = '<div>' + $pays[0].name + ' owes ' + $receives[0].name + ' ' + formatCurrency($receives[0].debt) + ' for ' + $pays[0].items.join("\, ") + '</div>';
@@ -241,6 +228,20 @@ $(document).ready(function() {
 				$pays[0].debt -= $pays[0].debt;
 				$receives[0].debt -= $receives[0].debt;
 				$pays.shift();
+				$receives.shift();
+				continue;
+			}
+			// If payer owes zero, debts were assumed during merge. remove pay amount
+			if ($pays[0] !== undefined && $pays[0].debt == 0) {
+				var $payerZero = '<div>' + $pays[0].name + "'s debts were cancelled out for " + $pays[0].items.join("\, ") + '</div>';
+				$results.append($payerZero);
+				$pays.shift();
+				continue;
+			}
+			// If receiver receives zero, remove receive amount
+			if ($receives[0] !== undefined && $receives[0].debt == 0) {
+				var $receiverZero = '<div>' + $receives[0].name + "'s debts were cancelled out for " + $receives[0].items.join("\, ") + '</div>';
+				$results.append($receiverZero);
 				$receives.shift();
 			}
 		}	
