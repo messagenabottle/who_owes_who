@@ -254,7 +254,7 @@ $(document).ready(function() {
 			action: 'store-debt',
 		};
 
-		$.post('/core/ajax/store-debt.php', ajaxData, function(data, textStatus,jqXHR) {
+		$.post('core/ajax/store-debt.php', ajaxData, function(data, textStatus,jqXHR) {
 			console.log(data);
 		});
 
